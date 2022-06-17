@@ -1,0 +1,83 @@
+--Task 5 Cigars by Price
+
+SELECT
+	CigarName,
+	PriceForSingleCigar,
+	ImageUrl
+FROM Cigars
+ORDER BY PriceForSingleCigar ASC, CigarName  DESC
+
+--Task 6 Cigars by Taste
+
+SELECT 
+	c.Id
+	,CigarName
+	,PriceForSingleCigar
+	,TasteType
+	,TasteStrength
+FROM Cigars AS c
+JOIN Tastes AS t ON c.TastId = t.Id
+WHERE TasteType IN ('Woody', 'Earthy')
+ORDER BY PriceForSingleCigar DESC
+
+--Task 7 Clients without Cigars
+
+SELECT
+	Id
+	,CONCAT(FirstName, ' ', LastName) AS ClientName
+	,Email
+FROM Clients
+WHERE NOT EXISTS (SELECT 1 FROM ClientsCigars WHERE ClientId = Id)
+ORDER BY 2 ASC
+
+--Task 8 First 5 Cigars
+
+SELECT TOP 5
+CigarName
+,PriceForSingleCigar
+,ImageURL
+FROM Cigars AS c
+JOIN Sizes AS s ON c.SizeId = s.Id
+WHERE
+s.[Length] >= 12
+AND (CigarName LIKE '%ci%'OR c.PriceForSingleCigar > 50)
+AND s.RingRange > 2.55
+ORDER BY c.CigarName ASC, c.PriceForSingleCigar DESC
+
+--Task 9 Clients with ZIP Codes
+
+SELECT
+CONCAT(c.FirstName, ' ', c.LastName) AS FullName
+,a.Country
+,a.ZIP
+,CONCAT('$',
+	(SELECT 
+		MAX(PriceForSingleCigar)
+	FROM Cigars AS CG 
+	JOIN ClientsCigars AS cc ON cg.Id = cc.CigarId AND cc.ClientId = c.Id)) AS CigarPrice
+FROM Clients AS c
+JOIN Addresses AS a ON c.AddressId = a.Id
+WHERE ISNUMERIC(a.ZIP) = 1
+ORDER BY 1 ASC
+
+--Task 10 Cigars by Size
+
+SELECT
+	LastName,
+	AVG(s.[Length]) as CigarLength,
+	CEILING(AVG(s.RingRange)) AS CigarRingRange
+FROM Clients AS c
+JOIN ClientsCigars AS cc ON cc.ClientId = c.Id
+JOIN Cigars AS cg ON cc.CigarId = cg.Id
+JOIN Sizes AS s ON cg.SizeId = s.Id
+GROUP BY c.LastName
+ORDER BY 2 DESC
+
+--Task 11 Client with Cigars
+
+CREATE FUNCTION udf_ClientWithCigars(
+
+)
+
+
+--Task 12 Search for Cigar with Specific Taste
