@@ -1,1 +1,10 @@
--- TO DO
+-- TASK 5
+
+SELECT 
+	[Name], 
+	PhoneNumber,
+	[Address],
+	AnimalId,
+	DepartmentId
+	FROM Volunteers
+	ORDER BY [Name],AnimalId,DepartmentId
