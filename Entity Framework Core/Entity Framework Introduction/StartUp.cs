@@ -10,10 +10,10 @@ namespace EntityFrameWorkCore.DBFirst
     {
         static void Main(string[] args)
         {
-            var contexy = new SoftUniContext();
+            var context = new SoftUniContext();
             
             // Task 1
-            var output = GetEmployeesFullInformation(contexy);
+            var output = GetEmployeesFullInformation(context);
             //
             
             // Task 2
@@ -72,7 +72,6 @@ namespace EntityFrameWorkCore.DBFirst
         {
             var sb = new StringBuilder();
            
-
             foreach (var e in context.Employees
                 .Where(d => d.DepartmentId == 6)
                 .OrderBy(s => s.Salary)
@@ -81,8 +80,10 @@ namespace EntityFrameWorkCore.DBFirst
                 sb.AppendLine($"{e.FirstName} {e.LastName} " +
                     $"from Research and Development ${e.Salary:f2}");
             }
+            
             return sb.ToString();
         }
+        
         //
 
         // Task 4
