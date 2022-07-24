@@ -10,21 +10,21 @@ namespace EntityFrameWorkCore.DBFirst
     {
         static void Main(string[] args)
         {
-            var contex = new SoftUniContext();
+            var contexy = new SoftUniContext();
             
             // Task 1
-            var output = GetEmployeesFullInformation(contex);
+            var output = GetEmployeesFullInformation(contexy);
+            //
+            
+            // Task 2
+            output = GetEmployeesWithSalaryOver50000(context);
             //
 
-            // Task 
-
+            // Task 3
+            output = GetEmployeesFromResearchAndDevelopment(context);
             //
 
-            // Task 
-
-            //
-
-            // Task 
+            // Task 4
 
             //
 
@@ -52,15 +52,40 @@ namespace EntityFrameWorkCore.DBFirst
         }
         //
 
-        // Task 
+        // Task 2
+        public static string GetEmployeesWithSalaryOver50000(SoftUniContext context)
+        {
+            var sb = new StringBuilder();
 
+            foreach (var e in context.Employees
+                .Where(x => x.Salary > 50000)
+                .OrderBy(x => x.FirstName))
+            {
+                sb.AppendLine($"{e.FirstName} - {e.Salary:f2}");
+            }
+            return sb.ToString();
+        }
         //
 
-        // Task 
+        // Task 3
+        public static string GetEmployeesFromResearchAndDevelopment(SoftUniContext context)
+        {
+            var sb = new StringBuilder();
+           
 
+            foreach (var e in context.Employees
+                .Where(d => d.DepartmentId == 6)
+                .OrderBy(s => s.Salary)
+                .ThenByDescending(n => n.FirstName))
+            {
+                sb.AppendLine($"{e.FirstName} {e.LastName} " +
+                    $"from Research and Development ${e.Salary:f2}");
+            }
+            return sb.ToString();
+        }
         //
 
-        // Task 
+        // Task 4
 
         //
 
