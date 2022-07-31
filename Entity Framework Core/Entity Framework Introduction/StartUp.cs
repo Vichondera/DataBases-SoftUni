@@ -92,6 +92,47 @@ namespace SoftUni
             }
             return result.ToString().TrimEnd();
         }
-        
+
+        // 07. Employees and Projects
+        public static string GetEmployeesInPeriod(SoftUniContext context)
+        {
+            StringBuilder result = new StringBuilder();
+
+var emplWPr = context
+                .Employees
+                .Where(e => e.EmployeesProjects
+                .Any(ep => ep.Project.StartDate.Year >= 2001 && ep.Project.StartDate.Year <= 2003))
+                .Take(10)
+                .Select(e => new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    ManagerFirstName = e.Manager.FirstName,
+                    ManagerLastName = e.Manager.LastName,
+                    AllProjects = e.EmployeesProjects
+                    .Select(ep => new
+                    {
+                        ProjectName = ep.Project.Name,
+                        StartData = ep.Project.StartDate.ToString("M/d/yyyy h:mm:ss tt"),
+                        EndDate = ep.Project.EndDate.HasValue ? 
+                        ep.Project.EndDate.Value.ToString("M/d/yyyy h:mm:ss tt") : "not finished"
+                    })
+                })
+                .ToArray();
+
+            foreach (var e in emplWPr)
+            {
+                result.AppendLine($"{e.FirstName} {e.LastName} - Manager: {e.FirstName} {e.LastName}");
+
+                foreach (var pr in e.AllProjects)
+                {
+                    result
+                        .AppendLine($"--{pr.ProjectName} - {pr.StartData} - {pr.EndDate}");
+                }
+            }
+
+            return result.ToString().TrimEnd();
+        }
     }
 }
+
