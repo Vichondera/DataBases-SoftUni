@@ -1,16 +1,18 @@
 namespace SoftUni
 {
-    using SoftUni.Data;
     using System;
     using System.Linq;
     using System.Text;
+    
+    using SoftUni.Data;
 
     public class StartUp
     {
         static void Main(string[] args)
         {
             SoftUniContext context = new SoftUniContext();
-
+            
+            // Change method's name to see result for olther tasks
             Console.WriteLine(GetEmployeesFromResearchAndDevelopment(context));
         }
 
@@ -59,5 +61,37 @@ namespace SoftUni
         }
 
         // TASK 06. Adding a New Address and Updating Employee
+         public static  string AddNewAddressToEmployee(SoftUniContext context)
+        {
+            var result = new StringBuilder();
+
+            Address newAddress = new Address()
+            {
+                AddressText = "Vitoshka 15",
+                TownId = 4
+            };
+            context.Addresses.Add(newAddress);
+
+            Employee nakov = context
+                .Employees
+                .FirstOrDefault(e => e.LastName == "Nakov");
+
+            nakov.Address = newAddress;
+            context.SaveChangesAsync();
+
+            var addrText = context
+                .Employees
+                .OrderByDescending(e => e.AddressId)
+                .Take(10)
+                .Select(e => e.Address.AddressText)
+                .ToArray();
+
+            foreach (var a in addrText)
+            {
+                result.AppendLine(a);
+            }
+            return result.ToString().TrimEnd();
+        }
+        
     }
 }
